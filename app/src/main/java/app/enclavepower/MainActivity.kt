@@ -54,43 +54,53 @@ class MainActivity : Activity() {
 
         pairStatus = TextView(this)
         column.addView(pairStatus)
-        column.addView(Button(this).apply {
-            text = "Pair with Enclave"
-            setOnClickListener { pair() }
-        })
+        column.addView(
+            Button(this).apply {
+                text = "Pair with Enclave"
+                setOnClickListener { pair() }
+            },
+        )
 
         lastResult = TextView(this)
         column.addView(lastResult)
-        column.addView(Button(this).apply {
-            text = "Turn Enclave on now"
-            setOnClickListener {
-                lastResult.text = "Connecting to ${prefs.address}…"
-                PowerOn.request(this@MainActivity, "manual") { line ->
-                    runOnUiThread { lastResult.text = "Last: $line" }
+        column.addView(
+            Button(this).apply {
+                text = "Turn Enclave on now"
+                setOnClickListener {
+                    lastResult.text = "Connecting to ${prefs.address}…"
+                    PowerOn.request(this@MainActivity, "manual") { line ->
+                        runOnUiThread { lastResult.text = "Last: $line" }
+                    }
                 }
-            }
-        })
+            },
+        )
 
-        column.addView(Switch(this).apply {
-            text = "Turn on when the Shield wakes"
-            isChecked = prefs.onWake
-            setOnCheckedChangeListener { _, checked -> prefs.onWake = checked }
-        })
+        column.addView(
+            Switch(this).apply {
+                text = "Turn on when the Shield wakes"
+                isChecked = prefs.onWake
+                setOnCheckedChangeListener { _, checked -> prefs.onWake = checked }
+            },
+        )
 
-        column.addView(TextView(this).apply {
-            text = "Turn on when these apps open:"
-            setPadding(0, pad, 0, 0)
-        })
+        column.addView(
+            TextView(this).apply {
+                text = "Turn on when these apps open:"
+                setPadding(0, pad, 0, 0)
+            },
+        )
         val selected = prefs.triggerPackages.toMutableSet()
         for ((pkg, label) in installedApps(selected)) {
-            column.addView(CheckBox(this).apply {
-                text = label
-                isChecked = pkg in selected
-                setOnCheckedChangeListener { _, checked ->
-                    if (checked) selected.add(pkg) else selected.remove(pkg)
-                    prefs.triggerPackages = selected
-                }
-            })
+            column.addView(
+                CheckBox(this).apply {
+                    text = label
+                    isChecked = pkg in selected
+                    setOnCheckedChangeListener { _, checked ->
+                        if (checked) selected.add(pkg) else selected.remove(pkg)
+                        prefs.triggerPackages = selected
+                    }
+                },
+            )
         }
 
         setContentView(ScrollView(this).apply { addView(column) })
@@ -106,8 +116,11 @@ class MainActivity : Activity() {
         super.onResume()
         val enabled = isServiceEnabled()
         serviceStatus.text =
-            if (enabled) "Trigger service: enabled"
-            else "Trigger service: disabled. In Settings, go to Device Preferences > Accessibility and turn on Enclave Power."
+            if (enabled) {
+                "Trigger service: enabled"
+            } else {
+                "Trigger service: disabled. In Settings, go to Device Preferences > Accessibility and turn on Enclave Power."
+            }
         settingsButton.visibility = if (enabled) View.GONE else View.VISIBLE
         lastResult.text = "Last: ${prefs.lastResult}"
         registerReceiver(bondReceiver, IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED))

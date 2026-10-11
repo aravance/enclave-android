@@ -20,8 +20,7 @@ object PowerOn {
         executor.execute {
             try {
                 val prefs = Prefs(appContext)
-                val result = EnclaveClient.powerOn(appContext, prefs.address)
-                val summary = when (result) {
+                val summary = when (val result = EnclaveClient.powerOn(appContext, prefs.address)) {
                     is EnclaveClient.Result.On -> "On (firmware ${result.firmware})"
                     is EnclaveClient.Result.Unconfirmed -> "Sent, not confirmed (firmware ${result.firmware})"
                     is EnclaveClient.Result.Failed -> "Failed: ${result.reason}"

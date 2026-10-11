@@ -50,6 +50,7 @@ object EnclaveClient {
     sealed class Result {
         /** Status reply confirmed the system is on. */
         data class On(val firmware: String) : Result()
+
         /** Command was sent but no status reply confirmed it in time. */
         data class Unconfirmed(val firmware: String) : Result()
         data class Failed(val reason: String) : Result()
@@ -119,8 +120,7 @@ object EnclaveClient {
         return Result.Unconfirmed(firmware)
     }
 
-    private fun command(cmd: Int, value: Int): ByteArray =
-        byteArrayOf(cmd.toByte(), (value + 128).toByte(), (cmd + value + 128).toByte(), '\n'.code.toByte())
+    private fun command(cmd: Int, value: Int): ByteArray = byteArrayOf(cmd.toByte(), (value + 128).toByte(), (cmd + value + 128).toByte(), '\n'.code.toByte())
 
     private fun isPoweredOn(status: ByteArray): Boolean {
         if (status.size < 18) return false
