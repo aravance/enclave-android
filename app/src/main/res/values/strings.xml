@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Enclave Power</string>
+    <string name="service_label">Enclave Power</string>
+    <string name="service_description">Turns the Enclave speakers on when this device wakes or when a chosen app opens. It only looks at which app is in the foreground.</string>
+</resources>
