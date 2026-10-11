@@ -47,7 +47,7 @@ class MainActivity : Activity() {
         column.addView(serviceStatus)
         // Android TV only stubs ACTION_ACCESSIBILITY_SETTINGS, so the nearest reachable screen is Settings itself.
         settingsButton = Button(this).apply {
-            text = "Open Settings"
+            setText(R.string.open_settings)
             setOnClickListener { startActivity(Intent(Settings.ACTION_SETTINGS)) }
         }
         column.addView(settingsButton)
@@ -56,7 +56,7 @@ class MainActivity : Activity() {
         column.addView(pairStatus)
         column.addView(
             Button(this).apply {
-                text = "Pair with Enclave"
+                setText(R.string.pair_button)
                 setOnClickListener { pair() }
             },
         )
@@ -65,11 +65,11 @@ class MainActivity : Activity() {
         column.addView(lastResult)
         column.addView(
             Button(this).apply {
-                text = "Turn Enclave on now"
+                setText(R.string.power_on_now)
                 setOnClickListener {
-                    lastResult.text = "Connecting to ${prefs.address}…"
+                    lastResult.text = getString(R.string.connecting, prefs.address)
                     PowerOn.request(this@MainActivity, "manual") { line ->
-                        runOnUiThread { lastResult.text = "Last: $line" }
+                        runOnUiThread { lastResult.text = getString(R.string.last_result, line) }
                     }
                 }
             },
@@ -77,7 +77,7 @@ class MainActivity : Activity() {
 
         column.addView(
             Switch(this).apply {
-                text = "Turn on when the Shield wakes"
+                setText(R.string.on_wake_switch)
                 isChecked = prefs.onWake
                 setOnCheckedChangeListener { _, checked -> prefs.onWake = checked }
             },
@@ -85,7 +85,7 @@ class MainActivity : Activity() {
 
         column.addView(
             TextView(this).apply {
-                text = "Turn on when these apps open:"
+                setText(R.string.trigger_apps_heading)
                 setPadding(0, pad, 0, 0)
             },
         )
@@ -115,14 +115,9 @@ class MainActivity : Activity() {
     override fun onResume() {
         super.onResume()
         val enabled = isServiceEnabled()
-        serviceStatus.text =
-            if (enabled) {
-                "Trigger service: enabled"
-            } else {
-                "Trigger service: disabled. In Settings, go to Device Preferences > Accessibility and turn on Enclave Power."
-            }
+        serviceStatus.setText(if (enabled) R.string.service_enabled else R.string.service_disabled)
         settingsButton.visibility = if (enabled) View.GONE else View.VISIBLE
-        lastResult.text = "Last: ${prefs.lastResult}"
+        lastResult.text = getString(R.string.last_result, prefs.lastResult)
         registerReceiver(bondReceiver, IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED))
         updatePairStatus()
     }
@@ -145,12 +140,13 @@ class MainActivity : Activity() {
         } catch (e: SecurityException) {
             null
         }
-        pairStatus.text = "Enclave ${prefs.address}: " + when (state) {
-            BluetoothDevice.BOND_BONDED -> "paired"
-            BluetoothDevice.BOND_BONDING -> "pairing… accept the prompt"
-            BluetoothDevice.BOND_NONE -> "not paired"
-            else -> "Bluetooth unavailable"
+        val stateText = when (state) {
+            BluetoothDevice.BOND_BONDED -> R.string.pair_state_paired
+            BluetoothDevice.BOND_BONDING -> R.string.pair_state_pairing
+            BluetoothDevice.BOND_NONE -> R.string.pair_state_none
+            else -> R.string.bluetooth_unavailable
         }
+        pairStatus.text = getString(R.string.pair_status, prefs.address, getString(stateText))
     }
 
     @SuppressLint("MissingPermission")
@@ -158,7 +154,7 @@ class MainActivity : Activity() {
         try {
             if (enclave()?.createBond() != true) updatePairStatus()
         } catch (e: SecurityException) {
-            pairStatus.text = "Bluetooth permission not granted"
+            pairStatus.setText(R.string.bluetooth_permission_denied)
         }
     }
 

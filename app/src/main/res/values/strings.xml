@@ -3,4 +3,19 @@
     <string name="app_name">Enclave Power</string>
     <string name="service_label">Enclave Power</string>
     <string name="service_description">Turns the Enclave speakers on when this device wakes or when a chosen app opens. It only looks at which app is in the foreground.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="service_enabled">Trigger service: enabled</string>
+    <string name="service_disabled">Trigger service: disabled. In Settings, go to Device Preferences &gt; Accessibility and turn on Enclave Power.</string>
+    <string name="pair_button">Pair with Enclave</string>
+    <string name="pair_status">Enclave %1$s: %2$s</string>
+    <string name="pair_state_paired">paired</string>
+    <string name="pair_state_pairing">pairing… accept the prompt</string>
+    <string name="pair_state_none">not paired</string>
+    <string name="bluetooth_unavailable">Bluetooth unavailable</string>
+    <string name="bluetooth_permission_denied">Bluetooth permission not granted</string>
+    <string name="power_on_now">Turn Enclave on now</string>
+    <string name="connecting">Connecting to %1$s…</string>
+    <string name="last_result">Last: %1$s</string>
+    <string name="on_wake_switch">Turn on when the Shield wakes</string>
+    <string name="trigger_apps_heading">Turn on when these apps open:</string>
 </resources>
