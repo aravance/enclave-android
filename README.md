@@ -27,3 +27,7 @@ The Enclave's Bluetooth address is set in `Prefs.kt` (`DEFAULT_ADDRESS`).
 - Android only opens the serial channel to a paired device, and pairing makes
   it route audio to the Enclave over Bluetooth. `A2dpGuard.kt` drops that audio
   link so sound stays on HDMI. It uses a hidden API, tested on Android 11.
+
+## License
+
+Copyright 2026 Alex Avance. Licensed under the [Apache License, Version 2.0](LICENSE.txt).
